@@ -12,12 +12,11 @@ def main():
     profs_record = []
 
     for prof in profs:
-        # print(prof)
         record = pds.scrape_detail(prof)
         profs_record.append(record)
         # print('Done')
     writeToCSV(profs_record, ['Name', 'Avg Rating', 'Avg Difficulty'], './records.csv')
-    writeToCSV(students_review, ['Quality', 'Difficulty', 'Grade', "Comment"], './comments.csv')
+    writeToCSV(students_review, ['Prof Name', 'Quality', 'Difficulty', 'Grade', "Comment"], './comments.csv')
 
 
 def readJson():
@@ -51,8 +50,6 @@ class ProfDetailScraper:
     def __init__(self, review):
         self.review = review
 
-    # def selectReview(self):
-
     def scrape_detail(self, prof):
         result = requests.get(prof)
         # print(result.status_code)
@@ -67,8 +64,6 @@ class ProfDetailScraper:
         difficulty = selectAttribute(soup, 'div[class*="FeedbackItem__FeedbackNumber"]')
 
         record = [name, rating, difficulty]
-        # print(record[0], " ", record[1], " ", record[2])
-
         counter = 0
         grade = 0
         regex_body = re.compile('^Rating__RatingBody.*')
@@ -80,21 +75,27 @@ class ProfDetailScraper:
 
         # print(len(ratings_raw))
         for rating_raw in ratings_raw:
-            self.review = ['', '', '', '']
+            self.review = [name, '', '', '', '']
+
             for r in rating_raw.find_all('div', {'class': regex_num}):
-                self.review[counter % 2] = r.text
+                self.review[counter % 2 + 1] = r.text
                 # if counter % 2 == 1:
                 # print(review[0], ' ', review[1], ' ', review[2], ' ', review[3])
                 counter = counter + 1
-            for r in rating_raw.find('div', {'class': regex_meta}).contents:
+
+            for r in rating_raw.find('div', {'class': regex_meta}):
                 hasGrade = r.find(text=regex_grade)
-                if hasGrade:
-                    grade = hasGrade.parent.find('span').text
-                if len(str(grade)) > 2:
+                if hasGrade is None:
                     grade = 'N/A'
-                self.review[2] = grade
+                else:
+                    grade = hasGrade.parent.find('span').text
+                    if len(str(grade)) > 2:
+                        grade = 'N/A'
+                    break
+            self.review[3] = grade
+
             for r in rating_raw.find('div', {'class': regex_comment}):
-                self.review[3] = str(r)
+                self.review[4] = str(r)
 
             students_review.append(self.review)
 
