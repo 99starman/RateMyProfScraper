@@ -99,6 +99,7 @@ class ProfDetailScraper:
 
             students_review.append(self.review)
 
+        print("reviews of prof ", record[0], "scraped!")
         return record
 
 
