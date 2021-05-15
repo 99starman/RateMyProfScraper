@@ -104,4 +104,5 @@ class ProfDetailScraper:
 
 
 students_review = []
-main()
+if __name__ == '__main__':
+    main()
