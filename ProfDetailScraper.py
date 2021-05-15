@@ -14,7 +14,7 @@ def main():
     for prof in profs:
         record = pds.scrape_detail(prof)
         profs_record.append(record)
-        # print('Done')
+
     writeToCSV(profs_record, ['Name', 'Avg Rating', 'Avg Difficulty'], './records.csv')
     writeToCSV(students_review, ['Prof Name', 'Quality', 'Difficulty', 'Grade', "Comment"], './comments.csv')
 

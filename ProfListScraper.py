@@ -46,9 +46,14 @@ class ProfListScraper:
         start_url = urls[0]
         for url in urls:
             driver.get(url)
+            # -- For the first visit, RMP.com has a prompt for cookies and privacy policy.
+            # -- Need to simulate a click on "Close" before clicking on "Show More", otherwise they may overlap
             if url == start_url:
                 driver.implicitly_wait(8)
                 driver.find_element_by_css_selector('button[class*="StyledCloseButton"]').click()
+
+            # -- For now, set the number of clicks on "Show More" to be 3, for each school
+            # -- This should obtain enough data for analysis purposes
             for i in range(3):
                 # driver.execute_script("window.scrollTo(0,2000)")
                 element = WebDriverWait(driver, 3).until(
