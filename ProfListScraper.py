@@ -38,10 +38,12 @@ class ProfListScraper:
 
     def scrape_batch(self, urls):
         options = webdriver.ChromeOptions()
-        options.add_argument('--ignore-certificate-errors')
+        options.add_argument('--ignore-certificate-errors-spki-list')
+        options.add_argument('--ignore-ssl-errors')
+        options.add_argument('--hide-scrollbars')
+        options.add_argument("--log-level=3")
         options.add_argument('--headless')
-        driver = webdriver.Chrome()
-        driver.maximize_window()
+        driver = webdriver.Chrome(options=options)
 
         start_url = urls[0]
         for url in urls:
@@ -49,7 +51,7 @@ class ProfListScraper:
             # -- For the first visit, RMP.com has a prompt for cookies and privacy policy.
             # -- Need to simulate a click on "Close" before clicking on "Show More", otherwise they may overlap
             if url == start_url:
-                driver.implicitly_wait(8)
+                driver.implicitly_wait(15)
                 driver.find_element_by_css_selector('button[class*="StyledCloseButton"]').click()
 
             # -- For now, set the number of clicks on "Show More" to be 3, for each school
@@ -66,7 +68,7 @@ class ProfListScraper:
             if result.status_code != 200:
                 print("error: status code " + str(result.status_code))
                 break
-            print(result.status_code)
+            # print(result.status_code)
             src = driver.page_source
             # driver.quit()
             self.scrape_url(src)
@@ -74,4 +76,5 @@ class ProfListScraper:
         return self.teacher_list
 
 
-main()
+if __name__ == '__main__':
+    main()
