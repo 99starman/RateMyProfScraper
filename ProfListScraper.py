@@ -19,7 +19,7 @@ def main():
 
 def writeToJson(profs):
     jString = json.dumps(profs, indent=2)
-    jFile = open("profs.json", "w")
+    jFile = open("scraped data/profs.json", "w")
     jFile.write(jString)
     jFile.close()
 

@@ -15,12 +15,12 @@ def main():
         record = pds.scrape_detail(prof)
         profs_record.append(record)
 
-    writeToCSV(profs_record, ['Name', 'Avg Rating', 'Avg Difficulty'], './records.csv')
-    writeToCSV(students_review, ['Prof Name', 'Quality', 'Difficulty', 'Grade', "Comment"], './comments.csv')
+    writeToCSV(profs_record, ['Name', 'Avg Rating', 'Avg Difficulty'], 'scraped data/records.csv')
+    writeToCSV(students_review, ['Prof Name', 'Quality', 'Difficulty', 'Grade', "Comment"], 'scraped data/comments.csv')
 
 
 def readJson():
-    with open('./profs.json') as f:
+    with open('scraped data/profs.json') as f:
         profs = json.load(f)
     return profs
 
